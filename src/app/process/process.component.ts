@@ -12,4 +12,8 @@ export class ProcessComponent implements OnInit {
   ngOnInit() {
   }
 
+  process() : any {
+
+  }
+
 }
