@@ -4,12 +4,14 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { UploadComponent } from './upload/upload.component';
+import { ProcessComponent } from './process/process.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    UploadComponent
+    UploadComponent,
+    ProcessComponent
   ],
   imports: [
     BrowserModule
