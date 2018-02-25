@@ -22,7 +22,11 @@ export class MainComponent implements OnInit, OnChanges {
 
   img: any;
 
-  queue: Array<any>;
+  points: Array<any>;
+
+  static dist(x, y, a, b): number {
+    return (x - a) * (x - a) + (y - b) * (y - b);
+  }
 
   ngOnInit() {
   }
@@ -45,10 +49,10 @@ export class MainComponent implements OnInit, OnChanges {
     this.img.src = this.file.dataURL;
     this.img.onload = () => {
 
-      this.canvas.width = this.img.width >> 1;
-      this.canvas.height = this.img.height >> 1;
+      this.canvas.width = this.img.width;
+      this.canvas.height = this.img.height;
 
-      this.queue = [];
+      this.points = [];
       this.draw();
 
       this.canvas.addEventListener('click', this.click(event), false);
@@ -56,15 +60,25 @@ export class MainComponent implements OnInit, OnChanges {
   }
 
   draw(): void {
-    this.ctx.drawImage(this.img, 0, 0, this.img.width >> 1, this.img.height >> 1);
+    this.ctx.drawImage(this.img, 0, 0, this.img.width, this.img.height);
 
     // draw navigation lines
-    if (this.queue.length >= 2) {
+    if (this.points.length >= 2) {
       this.astar();
     }
 
     // draw points
-    // todo
+    this.points.forEach(function (item, index) {
+      const radius = 5;
+
+      this.ctx.beginPath();
+      this.ctx.arc(item.x, item.y, radius, 0, 2 * Math.PI, false);
+      this.ctx.fillStyle = 'green';
+      this.ctx.fill();
+      this.ctx.lineWidth = 5;
+      this.ctx.strokeStyle = '#003300';
+      this.ctx.stroke();
+    });
   }
 
   astar(): void {
@@ -72,31 +86,27 @@ export class MainComponent implements OnInit, OnChanges {
   }
 
   click(event): void {
-    var x = event.offsetX;
-    var y = event.offsetY;
+    const x = event.offsetX;
+    const y = event.offsetY;
 
     // find all points that are too close and remove them
-    if (this.queue.length > 0) {
-      for (var i = this.queue.length - 1; i >= 0; i--) {
-        if (MainComponent.dist(x, y, this.queue[i].x, this.queue[i].y) < 5) { // todo
-          this.queue.splice(i, 1);
+    if (this.points.length > 0) {
+      for (let i = this.points.length - 1; i >= 0; i--) {
+        if (MainComponent.dist(x, y, this.points[i].x, this.points[i].y) < 5) { // todo
+          this.points.splice(i, 1);
           return;
         }
       }
     }
 
     // queue can only hold 2 elements
-    while (this.queue.length > 2) {
-      this.queue.shift();
+    while (this.points.length > 2) {
+      this.points.shift();
     }
 
     // add point to canvas
-    this.queue.push({x: x, y: y});
+    this.points.push({x: x, y: y});
     this.draw();
-  }
-
-  static dist(x, y, a, b): number {
-    return (x - a) * (x - a) + (y - b) * (y - b);
   }
 
 }
