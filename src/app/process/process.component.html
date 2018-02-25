@@ -1,25 +1,19 @@
-<div *ngIf=(CheckMove()) id="overall">
+<div *ngIf=(this.submitted) id="overall">
   <!-- to do: animate button entrances? can do -->
-  <div class="buttons">
-    <button class="standard-button hvr-bounce-in" (click)="RUNMMM()">Sharp</button>
+  <div class="buttons" [@fadeIn]="fadeState" (@fadeIn.done)="endFade()" [ngClass]="{'opaque': unOpaque}">
+    <button class="standard-button hvr-bounce-in">Sharp</button>
     <br>
     <button class="standard-button hvr-bounce-in">Blurry</button>
     <br>
     <button class="standard-button hvr-bounce-in bot-marg">Dirty</button>
   </div>
 
-  <div class="header text-center marg-top display-4">
+  <div class="header text-center marg-top display-3">
     Please select the quality of your image below.
   </div>
   <!-- i'll deal with your meme ass later -->
-  <div class="main img-wrapper">
-    <img src={{file.dataURL}}>
-
-
-    <canvas id="GRORORO" (appOnCreate)="RUNMMM()" width="500" height="500">
-
+  <div class="main">
+    <canvas id="GRORORO">
     </canvas>
-
-    hello world???
   </div>
 </div>

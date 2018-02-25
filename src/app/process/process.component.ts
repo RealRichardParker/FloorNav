@@ -1,7 +1,8 @@
 ///<reference path="../../../node_modules/@angular/core/src/metadata/directives.d.ts"/>
-import {Component, OnInit, Input, AfterViewInit, AfterContentInit, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, Input, AfterViewInit, AfterContentInit, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { NgClass } from '@angular/common';
 import * as astar from 'javascript-astar';
+import {trigger, state, style, animate, keyframes, transition} from '@angular/animations';
 
 const Graph = astar.Graph;
 const search = astar.astar.search;
@@ -9,7 +10,24 @@ const search = astar.astar.search;
 @Component({
   selector: 'app-process',
   templateUrl: './process.component.html',
-  styleUrls: ['./process.component.css']
+  styleUrls: ['./process.component.css'],
+  animations: [
+    trigger('bounceInDown', [
+      transition('inactive => active', animate(750, keyframes([
+        style({opacity: 0, transform: 'translate3d(0, -3000px, 0)', offset: 0}),
+        style({opacity: 1, transform: 'translate3d(0, 25px, 0)', offset: 0.6}),
+        style({transform: 'translate3d(0, -10px, 0)', offset: 0.75}),
+        style({transform: 'translate3d(0, 5px, 0)', offset: 0.9}),
+        style({transform: 'translate3d(0, 0, 0)', offset: 1}),
+      ]))),
+    ]),
+    trigger('fadeIn', [
+      transition('inactive => active', animate(750, keyframes([
+        style({opacity: 0, transform: 'translate3d(-100%, 0, 0)'}),
+        style({opacity: 1, transform: 'translate3d(0, 0, 0)'}),
+      ]))),
+    ])
+  ]
 })
 export class ProcessComponent implements OnInit {
 
@@ -23,30 +41,72 @@ export class ProcessComponent implements OnInit {
   ngOnInit() {
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    for (let propertyName in changes) {
+      if (propertyName == "submitted" && this.submitted == true) {
+        setTimeout(() => {
+          this.fadeOnce();
+          this.RUNMMM();
+        }, 1);
+      }
+    }
+  }
+
   @Input() file: any;
 
   @Input() submitted: boolean;
+
+  canvas : any;
+
+  ctx : any;
+
+  img : any;
+
+  fadeState: string = 'inactive';
+
+  unOpaque: boolean = true;
+
+  fadeOnce(): void {
+    this.fadeState = 'active';
+  }
+
+  endFade(): void {
+    this.fadeState = 'inactive';
+    this.unOpaque = false;
+  }
 
   process(): any {
 
   }
 
-  CheckMove(): boolean {
-    if (this.submitted) {
-      return true;
-    }
-    return false;
-  }
-
   RUNMMM() {
     console.log('RUN MMMM');
-    const c = <HTMLCanvasElement>document.getElementById('GRORORO');
-    const ctx = c.getContext('2d');
+    this.canvas = <HTMLCanvasElement>document.getElementById('GRORORO');
+    this.ctx =  this.canvas.getContext('2d');
 
-    const img = new Image;
-    img.src = this.file.dataURL;
-    ctx.drawImage(img, 0, 0);
+    this.img = new Image;
+    this.img.src = this.file.dataURL;
+    this.img.onload = () => {
+
+      this.canvas.width = this.img.width >> 1;
+      this.canvas.height =this.img.height >> 1;
+
+      this.draw();
+
+      this.canvas.addEventListener('mouseout', this.draw.bind(this), false);
+      this.canvas.addEventListener('mousemove', this.move.bind(this), false);
+    }
   }
+
+  draw() : void {
+    this.ctx.drawImage(this.img, 0, 0, this.img.width >> 1, this.img.height >> 1);
+  }
+
+  /* this can be optimized more; use proportions and shit */
+  move(e : any) {
+    this.ctx.drawImage(this.img, -e.clientX, -e.clientY, this.img.width + 800, this.img.height + 300);
+  }
+
 
   shortest(map: Array<Array<boolean>>, start: number, end: number) {
     // todo:
