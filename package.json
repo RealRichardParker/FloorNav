@@ -25,6 +25,7 @@
     "himalaya": "^1.0.1",
     "hocrjs": "^0.3.5",
     "html-to-json": "^0.6.0",
+    "javascript-astar": "^0.4.1",
     "ngx-dropzone-wrapper": "^5.3.3",
     "node-hocr": "0.0.4",
     "node-tesseract": "^0.2.7",
