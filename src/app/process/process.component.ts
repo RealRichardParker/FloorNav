@@ -245,10 +245,10 @@ export class ProcessComponent implements OnInit, OnChanges {
     this.processSelected = true;
 
     // Get Image data
-    let pixels = this.ctx.getImageData(0, 0, this.img.width, this.img.height);
+    let pixels = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
 
     ProcessComponent.sharpen(pixels, true);
-    pixels = this.posterize(pixels, 200);
+    pixels = this.posterize(pixels, 50);
 
     const small = <HTMLCanvasElement>document.createElement('canvas');
     const ctx = small.getContext('2d');
@@ -310,7 +310,7 @@ export class ProcessComponent implements OnInit, OnChanges {
     for (let r = 0; r < pixels.height; r++) {
       map[r] = [];
       for (let c = 0; c < pixels.width; c++) {
-        map[r][c] = data.data[r * pixels.width * 4 + c * 4];
+        map[r][c] = data.data[r * pixels.width * 4 + c * 4] > 240;
       }
     }
 

@@ -120,11 +120,14 @@ export class MainComponent implements OnInit, OnChanges {
     // draw points
     this.points.forEach(function (item, index) {
       const radius = 5;
+      const scaleX = this.canvas.width / this.map.grid[0].length;
+      const scaleY = this.canvas.height / this.map.grid.length;
+
 
       this.ctx.beginPath();
-      this.ctx.arc(item.x, item.y, radius, 0, 2 * Math.PI, false);
+      this.ctx.arc(item.x * scaleX, item.y * scaleY, radius, 0, 2 * Math.PI, false);
       this.ctx.fillStyle = 'green';
-      // this.ctx.fill();
+      this.ctx.fill();
       this.ctx.lineWidth = 2;
       this.ctx.strokeStyle = '#003300';
       this.ctx.stroke();
@@ -138,13 +141,15 @@ export class MainComponent implements OnInit, OnChanges {
   }
 
   drawPath(): void {
+    const scaleX = this.canvas.width / this.map.grid[0].length;
+    const scaleY = this.canvas.height / this.map.grid.length;
     if (!this.path || this.path.length < 2) {
       // todo: no path found :(
     } else {
       this.ctx.beginPath();
-      this.ctx.moveTo(this.path[0].x, this.path[0].y);
+      this.ctx.moveTo(this.path[0].x * scaleX, this.path[0].y * scaleY);
       for (let i = 1; i < this.path.length; i++) {
-        this.ctx.lineTo(this.path[i].x, this.path[i].y);
+        this.ctx.lineTo(this.path[i].x * scaleX, this.path[i].y * scaleY);
       }
       this.ctx.strokeStyle = "#ff0000";
       this.ctx.stroke();
@@ -154,10 +159,11 @@ export class MainComponent implements OnInit, OnChanges {
   click(event): void {
     const radius = 5;
 
-    const scale = this.map.grid.length / this.canvas.height;
+    const scaleX = this.canvas.width / this.map.grid[0].length;
+    const scaleY = this.canvas.height / this.map.grid.length;
 
-    const x = Math.floor(event.offsetX * scale);
-    const y = Math.floor(event.offsetY * scale);
+    const x = Math.floor(event.offsetX / scaleX);
+    const y = Math.floor(event.offsetY / scaleY);
 
     // find all points that are too close and remove them
     if (this.points.length > 0) {
