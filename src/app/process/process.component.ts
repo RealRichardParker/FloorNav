@@ -145,7 +145,7 @@ export class ProcessComponent implements OnInit, OnChanges {
         c++;
       }
     }
-    return (sum / c > thres) ? 0xffffff : 0;
+    return (sum / c > thres) ? 0xff : 0;
   }
 
   static grayPix(imageData: any, x: number, y: number): number {
@@ -228,8 +228,13 @@ export class ProcessComponent implements OnInit, OnChanges {
 
     for (let x = 0; x < res.width; x++) {
       for (let y = 0; y < res.height; y++) {
-        res.data[x][y] = ProcessComponent.pixAvr(pixels, Math.floor(x * factor), Math.floor(y * factor),
+        const num = ProcessComponent.pixAvr(pixels, Math.floor(x * factor), Math.floor(y * factor),
           Math.min(factor, res.width - x), Math.min(factor, res.height - y), thres);
+        const pos = y * res.width * 4 + x * 4;
+        res.data[pos] = num;
+        res.data[pos + 1] = num;
+        res.data[pos + 2] = num;
+        res.data[pos + 3] = 0xff;
       }
     }
 
@@ -240,23 +245,19 @@ export class ProcessComponent implements OnInit, OnChanges {
     this.processSelected = true;
 
     // Get Image data
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    const img = new Image(this.file.dataURL);
-    canvas.width = img.width;
-    canvas.height = img.height;
-    context.drawImage(img, 0, 0 );
-    let pixels = context.getImageData(0, 0, img.width, img.height);
+    let pixels = this.ctx.getImageData(0, 0, this.img.width, this.img.height);
 
     ProcessComponent.sharpen(pixels, true);
     pixels = this.posterize(pixels, 200);
 
-    this.canvas.width = pixels.width;
-    this.canvas.height = pixels.height;
-    this.ctx.drawImage(pixels, 0, 0);
-    this.ocr();
+    const small = <HTMLCanvasElement>document.createElement('canvas');
+    const ctx = small.getContext('2d');
+    small.width = pixels.width;
+    small.height = pixels.height;
+    ctx.putImageData(pixels, 0, 0);
+    this.ocr(small);
 
-    pixels = this.ctx.getImageData(0, 0, pixels.width, pixels.height);
+    pixels = ctx.getImageData(0, 0, pixels.width, pixels.height);
     this.genGraph(this.imageToBool(pixels));
 
     console.log(this.processSelected);
@@ -358,16 +359,16 @@ export class ProcessComponent implements OnInit, OnChanges {
     this.map = new Graph(dist);
   }
 
-  ocr() {
-
+  ocr(canvas) {
+    let ctx = canvas.getContext('2d');
     let tesseractPromise: any;
-    tesseractPromise = tesseract.recognize(this.canvas, {lang: 'eng'})
+    tesseractPromise = tesseract.recognize(canvas, {lang: 'eng'})
       .progress(message => console.log('current progress: ', message))
-    tesseractPromise = tesseract.recognize(this.canvas, {lang: 'eng'})
+    tesseractPromise = tesseract.recognize(canvas, {lang: 'eng'})
       .progress(message => console.log("current progress: ", message))
       .then(result => {
         this.parseTesseractResults(result);
-        this.drawRect();
+        this.drawRect(ctx);
       })
       .catch(rejected => {
         console.log('err with tesseractJob');
@@ -387,10 +388,10 @@ export class ProcessComponent implements OnInit, OnChanges {
     this.searchJson(json);
   }
 
-  drawRect() {
+  drawRect(ctx) {
     //console.log(coordsArr);
     // console.log(this.ctx.ImageData);
-    let imgData = this.ctx.getImageData(0, 0, this.img.width, this.img.height);
+    let imgData = ctx.getImageData(0, 0, this.img.width, this.img.height);
 
     // y * width + x
     console.log(this.coordsArr);
@@ -400,9 +401,9 @@ export class ProcessComponent implements OnInit, OnChanges {
       let leftY = obj.upperLeftY;
       let rightX = obj.lowerRightX;
       let rightY = obj.lowerRightY;
-      this.ctx.fillStyle = '#ffffffff';
-      this.ctx.fillRect(leftX, leftY, rightX - leftX, rightY - rightY);
-      this.ctx.putImageData(imgData, 0, 0);
+      ctx.fillStyle = '#ffffffff';
+      ctx.fillRect(leftX, leftY, rightX - leftX, rightY - rightY);
+      ctx.putImageData(imgData, 0, 0);
     }
   }
 

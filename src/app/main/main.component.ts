@@ -36,15 +36,28 @@ export class MainComponent implements OnInit, OnChanges {
     return (x - a) * (x - a) + (y - b) * (y - b);
   }
 
+  static perpDist(l1, l2, pt) {
+    const a = {x: pt.x - l1.x, y: pt.y - l1.y};
+    const b = {x: l2.x - l1.x, y: l2.y - l1.y};
+
+    function dot(p1, p2) {
+      return p1.x * p2.x + p1.y * p2.y;
+    }
+
+    const fac = dot(a, b) / dot(b, b);
+    const x = a.x - fac * b.x;
+    const y = a.y - fac * b.y;
+
+    return Math.sqrt(x * x + y * y);
+  }
+
   ngOnInit() {
   }
 
   ngOnChanges(changes: SimpleChanges) {
     for (let propertyName in changes) {
-      if (propertyName === 'submitted' && this.submitted === true) {
-        setTimeout(() => {
-          this.initCanvas.bind(this);
-        }, 1);
+      if (propertyName === 'show' && this.show === true) {
+        setTimeout(this.initCanvas.bind(this), 1);
       }
     }
   }
@@ -52,6 +65,7 @@ export class MainComponent implements OnInit, OnChanges {
   initCanvas() {
     this.canvas = <HTMLCanvasElement>document.getElementById('mainCanvas');
     this.ctx = this.canvas.getContext('2d');
+    this.points = [];
 
     this.img = new Image;
     this.img.src = this.file.dataURL;
@@ -60,26 +74,46 @@ export class MainComponent implements OnInit, OnChanges {
       this.canvas.width = this.img.width;
       this.canvas.height = this.img.height;
 
-      this.points = [];
       this.draw();
 
-      this.canvas.addEventListener('click', this.click(event), false);
+      this.canvas.addEventListener('click', this.click.bind(this), false);
     };
   }
 
-  draw(): void {
-    // call astar
-    if (this.points.length >= 2) {
-      this.ctx.fillStyle = 'while';
-      this.ctx.fillRect(0, 0, this.img.width, this.img.height);
+  smoothPath(ptList: Array<any>, epsilon): Array<any> {
+    if (ptList.length === 0)
+      return [];
 
-      this.astar();
+    let dmax = 0;
+    let index = 0;
+    const end = ptList.length;
+
+    let res = [];
+
+    for (let i = 1; i < end; i++) {
+      const d = MainComponent.perpDist(ptList[0], ptList[end - 1], ptList[i]);
+      if (d > dmax) {
+        index = i;
+        dmax = d;
+      }
     }
 
+    if (dmax > epsilon) {
+      res = this.smoothPath(ptList.slice(0, index), epsilon);
+      res.push.apply(res, this.smoothPath(ptList.slice(index), epsilon));
+    } else {
+      res = [ptList[0], ptList[end - 1]];
+    }
+
+    return res;
+  }
+
+  draw(): void {
     this.ctx.drawImage(this.img, 0, 0, this.img.width, this.img.height);
 
-    // draw navigation lines
+    // call astar
     if (this.points.length >= 2) {
+      this.astar();
       this.drawPath();
     }
 
@@ -90,34 +124,40 @@ export class MainComponent implements OnInit, OnChanges {
       this.ctx.beginPath();
       this.ctx.arc(item.x, item.y, radius, 0, 2 * Math.PI, false);
       this.ctx.fillStyle = 'green';
-      this.ctx.fill();
+      // this.ctx.fill();
       this.ctx.lineWidth = 2;
       this.ctx.strokeStyle = '#003300';
       this.ctx.stroke();
-    });
+    }.bind(this));
   }
 
   astar(): void {
     const start = this.map.grid[this.points[0].x][this.points[0].y];
     const end = this.map.grid[this.points[1].x][this.points[1].y];
-    this.path = search(this.map, start, end);
-
-    // todo: path smoothing
+    this.path = this.smoothPath(search(this.map, start, end), 5);
   }
 
   drawPath(): void {
-    if (!this.path || this.path.length === 0) {
+    if (!this.path || this.path.length < 2) {
       // todo: no path found :(
     } else {
-
+      this.ctx.beginPath();
+      this.ctx.moveTo(this.path[0].x, this.path[0].y);
+      for (let i = 1; i < this.path.length; i++) {
+        this.ctx.lineTo(this.path[i].x, this.path[i].y);
+      }
+      this.ctx.strokeStyle = "#ff0000";
+      this.ctx.stroke();
     }
   }
 
   click(event): void {
     const radius = 5;
 
-    const x = event.offsetX;
-    const y = event.offsetY;
+    const scale = this.map.grid.length / this.canvas.height;
+
+    const x = Math.floor(event.offsetX * scale);
+    const y = Math.floor(event.offsetY * scale);
 
     // find all points that are too close and remove them
     if (this.points.length > 0) {
