@@ -4,7 +4,6 @@ let util = require('util');
 let fs = require("fs");
 let tesseract = require('tesseract.js');
 let path = require('path');
-let stackBlur = require('stackblur-canvas');
 //import * as path from "path";
 //import * as fs from "fs";
 //import * as tesseract from 'tesseract.js';
@@ -31,11 +30,19 @@ function parseTesseractResults(result) {
 
   //himalaya works, cannot access members
   let json = himalaya.parse(result.html);
+  let promise = searchJson(json);
+  promise.then(result => {
+    fs.writeFile('output.txt', JSON.stringify(coordsArr), err =>
+    {
+      console.log(err);
+    })
+  })
+  /*let object = himalaya.parse(JSON.stringify(json[0]));
   fs.writeFile('src/app/process/ocr.json', JSON.stringify(json), result =>
   {
-    console.log(json.attributes);
+    console.log(JSON.stringify(object[0]));
     console.log("successful write");
-  });
+  });*/
 
   //this is htmlToJson solution
   /*let promies = htmlToJson.parse(result.html,{
@@ -46,4 +53,48 @@ function parseTesseractResults(result) {
     }
   });
   promies.done(result => {console.log(result)})*/
+}
+
+let coordsArr = [];
+
+async function searchJson(json) {
+  for(let key in json) {
+    let keys = Object.keys(json);
+    if(json.hasOwnProperty(key)){
+      if(json[key] == "span")
+      {
+        for(let nextKey in json.attributes)
+        {
+          if(json.attributes.hasOwnProperty(nextKey)) {
+            if(json.attributes[nextKey].value == "ocr_line")
+              break;
+            if(json.attributes[nextKey].key == 'title')
+            {
+              console.log(json.attributes[nextKey].value);
+              let arr = json.attributes[nextKey].value.split(" ");
+              coordsArr.push({
+                "upperLeftX": arr[1],
+                "upperLeftY": arr[2],
+                "lowerRightX": arr[3],
+                "lowerRightY": arr[4]
+              })
+            }
+
+          }
+        }
+      }
+      else if(typeof json[key] == 'object')
+      {
+
+        searchJson(json[key]);
+      }
+      //else
+        //console.log(json[key]);
+    }
+  }
+}
+
+function parseBbox(string)
+{
+
 }
