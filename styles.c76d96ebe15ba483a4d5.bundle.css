@@ -1,0 +1,16 @@
+@import "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css";
+/* You can add global styles to this file, and also import other style files */
+/* .container {
+  grid-template-rows: [row1-start] 25px [row1-end row2-start] 25px [row2-end];
+  grid-template-columns: auto 50px auto;
+  grid-template-areas:
+  "head head head head"
+  "aside main aside"
+  "aside main aside"
+  "aside main aside"
+  "aside main aside"
+  "foot foot foot foot";
+} */.large-icon{
+  /* grid-column-start: first;
+
+  grid-row-start: header; */font-size:20em}
