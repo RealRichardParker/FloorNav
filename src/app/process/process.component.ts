@@ -29,6 +29,22 @@ export class ProcessComponent implements OnInit {
 
   }
 
+
+  RUNMMM() {
+    console.log('RUN MMMM');
+    const c = <HTMLCanvasElement>document.getElementById('GRORORO');
+    const ctx = c.getContext('2d');
+
+    // Create gradient
+    const grd = ctx.createLinearGradient(0, 0, 200, 0);
+    grd.addColorStop(0, 'red');
+    grd.addColorStop(1, 'black');
+
+    // Fill with gradient
+    ctx.fillStyle = grd;
+    ctx.fillRect(10, 10, 150, 80);
+  }
+
   shortest(map: Array<Array<boolean>>, start: number, end: number) {
     // todo:
   }
