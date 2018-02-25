@@ -20,6 +20,8 @@ export class MainComponent implements OnInit, OnChanges {
 
   @Input() file: any;
 
+  @Input() show: boolean = false; //true if processing is complete
+
   canvas: any;
 
   ctx: any;
