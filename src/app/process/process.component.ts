@@ -15,6 +15,9 @@ import * as astar from 'javascript-astar';
 import {trigger, state, style, animate, keyframes, transition} from '@angular/animations';
 import * as tesseract from 'tesseract.js';
 import * as himalaya from 'himalaya';
+const options = {
+  langPath: "tessdata" // Or wherever your downloaded langs are stored
+};
 
 const Graph = astar.Graph;
 const search = astar.astar.search;
@@ -60,7 +63,6 @@ export class ProcessComponent implements OnInit, OnChanges {
           this.fadeOnce();
           this.bounceOnce();
           this.RUNMMM();
-          this.ocr();
         }, 1);
       }
     }
@@ -76,7 +78,7 @@ export class ProcessComponent implements OnInit, OnChanges {
 
   img: any;
 
-  coordsArr: Array<any>;
+  coordsArr: Array<any> = [];
 
   fadeState: string = 'inactive';
 
@@ -130,6 +132,7 @@ export class ProcessComponent implements OnInit, OnChanges {
 
   prepare(): void {
     this.processSelected = true;
+    this.ocr();
     console.log(this.processSelected);
   }
 
@@ -213,18 +216,20 @@ export class ProcessComponent implements OnInit, OnChanges {
   }
 
   ocr() {
+
     let tesseractPromise: any;
-    tesseractPromise = tesseract.create({langPath: "eng.traineddata"}).recognize(this.img, 'eng')
+    tesseractPromise = tesseract.recognize(this.file.dataURL, {lang: 'eng'})
       .progress(message => console.log("current progress: ", message))
       .then(result => {
-        this.parseTesseractResults(result)
+        this.parseTesseractResults(result);
         this.drawRect();
       })
       .catch(rejected => {
         console.log("err with tesseractJob")
       })
       .finally(failure => {
-        console.log("completed")
+        console.log("completed");
+        this.processComplete = true;
       });
   }
 
@@ -250,7 +255,7 @@ export class ProcessComponent implements OnInit, OnChanges {
 
   drawRect() {
     //console.log(coordsArr);
-    let imgData = this.ctx.ImageData(0, 0, this.canvas.width, this.canvas.height);
+    let imgData = this.ctx.ImageData(0, 0, this.img.width, this.img.height);
     let data = imgData.data;
 
     //y * width + x

@@ -32,7 +32,7 @@
     "node-tesseract": "^0.2.7",
     "nodejs-ocr": "^1.3.2",
     "rxjs": "^5.5.6",
-    "tesseract.js": "^1.0.10",
+    "tesseract.js": "github:mikewesthad/tesseract.js",
     "zone.js": "^0.8.19"
   },
   "devDependencies": {
