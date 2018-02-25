@@ -11,6 +11,7 @@ import { OnCreateDirective} from './app.onCreate.directive';
 import { AppComponent } from './app.component';
 import { UploadComponent } from './upload/upload.component';
 import { ProcessComponent } from './process/process.component';
+import { MainComponent } from './main/main.component';
 
 const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
  // Change this to your upload POST address:
@@ -24,7 +25,8 @@ const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
     AppComponent,
     OnCreateDirective,
     UploadComponent,
-    ProcessComponent
+    ProcessComponent,
+    MainComponent
   ],
   imports: [
     BrowserModule,

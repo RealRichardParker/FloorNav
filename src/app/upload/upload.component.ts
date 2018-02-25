@@ -84,7 +84,7 @@ export class UploadComponent implements OnInit {
     if (this.fileAdded) {
       setTimeout(() => {
         this.startPulse();
-      }, 1000);
+      }, 1500);
     }
   }
 

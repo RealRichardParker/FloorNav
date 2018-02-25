@@ -1,14 +1,5 @@
 ///<reference path="../../../node_modules/@angular/core/src/metadata/directives.d.ts"/>
-import {
-  Component,
-  OnInit,
-  Input,
-  AfterViewInit,
-  AfterContentInit,
-  Output,
-  EventEmitter,
-  SimpleChanges
-} from '@angular/core';
+import {Component, OnInit, Input, AfterViewInit, AfterContentInit, Output, EventEmitter, SimpleChanges, OnChanges} from '@angular/core';
 import {NgClass} from '@angular/common';
 import * as astar from 'javascript-astar';
 import {trigger, state, style, animate, keyframes, transition} from '@angular/animations';
@@ -40,7 +31,7 @@ const search = astar.astar.search;
     ])
   ]
 })
-export class ProcessComponent implements OnInit {
+export class ProcessComponent implements OnInit, OnChanges {
 
   static outOfRange(a: number, min: number, max: number): boolean {
     return a < min || a >= max;
@@ -54,7 +45,7 @@ export class ProcessComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     for (let propertyName in changes) {
-      if (propertyName == "submitted" && this.submitted == true) {
+      if (propertyName == 'submitted' && this.submitted == true) {
         setTimeout(() => {
           this.fadeOnce();
           this.bounceOnce();
@@ -80,6 +71,11 @@ export class ProcessComponent implements OnInit {
 
   bounceState: string = 'inactive';
 
+  //1 for sharp, 2 for blurry, 3 for dirty
+  processingType : number;
+
+  processSelected : boolean = false;
+
   unOpaque: boolean = true;
 
   fadeOnce(): void {
@@ -104,6 +100,25 @@ export class ProcessComponent implements OnInit {
 
   }
 
+  prepare1() : void {
+    this.processingType = 1;
+    this.prepare();
+  }
+
+  prepare2() : void {
+    this.processingType = 2;
+    this.prepare();
+  }
+
+  prepare3() : void {
+    this.processingType = 3;
+    this.prepare();
+  }
+
+  prepare() : void {
+    this.processSelected = true;
+  }
+
   RUNMMM() {
     console.log('RUN MMMM');
     this.canvas = <HTMLCanvasElement>document.getElementById('GRORORO');
@@ -120,7 +135,7 @@ export class ProcessComponent implements OnInit {
 
       this.canvas.addEventListener('mouseout', this.draw.bind(this), false);
       this.canvas.addEventListener('mousemove', this.move.bind(this), false);
-    }
+    };
   }
 
   draw(): void {
