@@ -1,4 +1,4 @@
-<div *ngIf=(this.submitted) id="overall">
+<div *ngIf=permitShow() id="overall">
   <!-- to do: animate button entrances? can do -->
   <div class="buttons" [@fadeIn]="fadeState" (@fadeIn.done)="endFade()" [ngClass]="{'opaque': unOpaque}">
     <button class="standard-button hvr-bounce-in" (click)="prepare1()">Sharp</button>
@@ -18,4 +18,6 @@
   </div>
 </div>
 
-<app-main></app-main>
+<div *ngIf=(this.processSelected)>Hello world~</div>
+
+<app-main [show]=processComplete [submitted]=submmited [file]=file></app-main>
