@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-process',
@@ -11,6 +11,10 @@ export class ProcessComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  @Input() file: boolean;
+
+  @Input() submitted: boolean;
 
   process() : any {
 

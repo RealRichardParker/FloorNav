@@ -1,3 +1,15 @@
+<div *ngIf = !submitted>
+  <i class="fas fa-upload large-icon"> </i>
 
+  <div class="form-group">
+      <label for="file">Upload floorplan</label>
+      <input type="file" id="file" (change)="handleFileInput($event.target.files)" accept=".jpg, .png">
+  </div>
 
-<i class="fas fa-upload large-icon"></i>
+  <!-- <div class="large-icon">Upload floorplan</div> -->
+  <div>Note that only .png and .jpg files are permitted</div>
+
+  <button class="btn btn-success btn-lg" [disabled]="!fileAdded" (click)="prepare()">Process</button>
+</div>
+
+<app-process [submitted]="submitted" [file]="fileToUpload"></app-process>

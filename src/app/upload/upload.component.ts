@@ -12,4 +12,19 @@ export class UploadComponent implements OnInit {
   ngOnInit() {
   }
 
+  fileToUpload: File = null;
+
+  fileAdded : boolean = false;
+
+  submitted : boolean = false;
+
+  handleFileInput(files: FileList) {
+    this.fileToUpload = files.item(0);
+    this.fileAdded = true;
+  }
+
+  prepare() : void {
+    this.submitted = true;
+  }
+
 }
