@@ -1,3 +1,27 @@
+<div *ngIf = !submitted id="upload">
+
+  <div class="main text-center">
+    <div [@bounceIn]="bounceState" (@bounceIn.done)="endBounce()" [ngClass]="{'opaque': unOpaque}">
+      <i class="fas fa-upload large-icon"> </i>
+    </div>
+
+    <div class="small slight-margin">Note that only .png and .jpg files are permitted</div>
+
+    <dropzone [config]="config" [message]="'Upload your map here!'" (error)="onUploadError($event)" (success)="onUploadSuccess($event)"></dropzone>
+    <!-- <div class="form-group move-down">
+      <input type="file" id="file" (change)="handleFileInput($event.target.files)" accept=".jpg, .png">
+    </div> -->
+  </div>
+
+  <div class="main text-center">
+    <div class="text-center">
+      <button class="btn btn-success btn-lg btn-down" [disabled]="!fileAdded" (click)="prepare()" [ngClass]="{'move-down' : fileAdded}">Process
+      </button>
+    </div>
 
 
-<i class="fas fa-upload large-icon"></i>
+  </div>
+
+</div>
+
+<app-process [submitted]="submitted" [file]="fileToUpload"></app-process>
