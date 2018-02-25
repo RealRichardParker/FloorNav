@@ -30,7 +30,7 @@ export class ProcessComponent implements OnInit {
   }
 
   shortest(map: Array<Array<boolean>>, start: number, end: number) {
-    //todo:
+    // todo:
   }
 
   rooms(map: Array<Array<boolean>>): Array<Array<number>> {
@@ -47,8 +47,9 @@ export class ProcessComponent implements OnInit {
     let level = [];
     for (let r = 0; r < map.length; r++) {
       for (let c = 0; c < map[r].length; c++) {
-        if (!map[r][c])
+        if (!map[r][c]) {
           level.push({r: r, c: c});
+        }
         dist[r][c] = map[r][c] ? -1 : 0;
       }
     }
@@ -59,8 +60,9 @@ export class ProcessComponent implements OnInit {
       for  (const loc of level) {
         for (const pair of adj) {
           if (ProcessComponent.outOfRange(loc.r + pair[0], 0, map.length) ||
-              ProcessComponent.outOfRange(loc.c + pair[1], 0, map[0].length))
+              ProcessComponent.outOfRange(loc.c + pair[1], 0, map[0].length)) {
             continue;
+          }
           if (dist[loc.r + pair[0]][loc.c + pair[1]] === -1) {
             dist[loc.r + pair[0]][loc.c + pair[1]] = i + 1;
             nextLevel.push({r: loc.r + pair[0], c: loc.c + pair[1]});
