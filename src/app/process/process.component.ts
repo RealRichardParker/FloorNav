@@ -60,6 +60,7 @@ export class ProcessComponent implements OnInit, OnChanges {
           this.fadeOnce();
           this.bounceOnce();
           this.RUNMMM();
+          this.ocr();
         }, 1);
       }
     }
