@@ -307,6 +307,8 @@ export class ProcessComponent implements OnInit, OnChanges {
     let tesseractPromise: any;
     tesseractPromise = tesseract.recognize(this.file.dataURL, {lang: 'eng'})
       .progress(message => console.log('current progress: ', message))
+    let tesseractPromise = tesseract.recognize(this.file.dataURL, {lang: 'eng'})
+      .progress(message => console.log("current progress: ", message))
       .then(result => {
         this.parseTesseractResults(result);
         this.drawRect();
@@ -326,25 +328,13 @@ export class ProcessComponent implements OnInit, OnChanges {
 
     // himalaya works, cannot access members
     let json = himalaya.parse(result.html);
-    let promise = this.searchJson(json);
-    /*promise.resolve(result => {
-      //fs.writeFile('output.txt', JSON.stringify(coordsArr), err => {
-        console.log(err);
-      });
-
-    }*/
-    /*let object = himalaya.parse(JSON.stringify(json[0]));
-    fs.writeFile('src/app/process/ocr.json', JSON.stringify(json), result => {
-      console.log(JSON.stringify(object));
-      console.log("successful write");
-    });*/
+    this.searchJson(json);
   }
 
   drawRect() {
     //console.log(coordsArr);
     // console.log(this.ctx.ImageData);
     let imgData = this.ctx.getImageData(0, 0, this.img.width, this.img.height);
-    let data = imgData.data;
 
     // y * width + x
     console.log(this.coordsArr);
@@ -362,7 +352,6 @@ export class ProcessComponent implements OnInit, OnChanges {
 
   searchJson(json) {
     for (let key in json) {
-      let keys = Object.keys(json);
       if (json.hasOwnProperty(key)) {
         if (json[key] == 'span') {
           for (let nextKey in json.attributes) {
