@@ -76,6 +76,8 @@ export class ProcessComponent implements OnInit, OnChanges {
 
   processSelected : boolean = false;
 
+  processComplete : boolean = false;
+
   unOpaque: boolean = true;
 
   fadeOnce(): void {
@@ -117,6 +119,11 @@ export class ProcessComponent implements OnInit, OnChanges {
 
   prepare() : void {
     this.processSelected = true;
+    console.log(this.processSelected);
+  }
+
+  permitShow() : boolean {
+    return this.submitted && !this.processSelected;
   }
 
   RUNMMM() {
