@@ -1,8 +1,14 @@
+/*
 let himalaya = require('himalaya');
 let fs = require("fs");
 let tesseract = require('tesseract.js');
 let path = require('path');
-let canvas = require('canvas');
+let {createCanvas, loadImage} = require('canvas');
+// const Image = createCanvas.Image;
+import {ProcessComponent} from "./process.component";
+
+
+
 //import * as path from "path";
 //import * as fs from "fs";
 //import * as tesseract from 'tesseract.js';
@@ -10,8 +16,8 @@ let canvas = require('canvas');
 
 
 let imgDir = "src/assets/first_floor_new.jpg";
-
-let tesseractPromise = tesseract.create({langPath: "eng.traineddata"}).recognize(imgDir, 'eng')
+let file = img;
+let tesseractPromise = tesseract.create({langPath: "eng.traineddata"}).recognize(process., 'eng')
   .progress(message => console.log("current progress: ", message))
   .then(result => {parseTesseractResults(result)
     .then(fulfill => {
@@ -19,7 +25,9 @@ let tesseractPromise = tesseract.create({langPath: "eng.traineddata"}).recognize
         .then((fulfilled) => {
           console.log("finished covering words: ");
       });
-  })});
+  })})
+  .catch(rejected => {console.log("err with tesseractJob")})
+  .finally(failure => {console.log("completed")});
 
 async function parseTesseractResults(result) {
   //console.log(result);
@@ -34,11 +42,11 @@ async function parseTesseractResults(result) {
     });
 
   });
-  let object = himalaya.parse(JSON.stringify(json[0]));
+  /!*let object = himalaya.parse(JSON.stringify(json[0]));
   fs.writeFile('src/app/process/ocr.json', JSON.stringify(json), result => {
-    console.log(JSON.stringify(object[0]));
+    console.log(JSON.stringify(object));
     console.log("successful write");
-  });
+  });*!/
 
 
 
@@ -47,18 +55,20 @@ let coordsArr = [];
 
 async function drawRect() {
   //console.log(coordsArr);
-  let img = new Image();
-  img.dir = imgDir;
+
+  let canvas = createCanvas();
   let ctx = canvas.getContext('2d');
   let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
   let data = imageData.data;
+  console.log(coordsArr);
   for(let val in coordsArr)
   {
-    let leftX = val[0];
-    let leftY = val[1];
-    let rightX = val[2];
-    let rightY = val[3];
-    console.log(typeof leftX);
+    let obj = coordsArr[val];
+    let leftX = obj.upperLeftX;
+    let leftY = obj.upperLeftY;
+    let rightX = obj.lowerRightX;
+    let rightY = obj.lowerRightY;
+    console.log(leftX);
   }
 }
 
@@ -93,3 +103,4 @@ async function searchJson(json) {
     }
   }
 }
+*/
