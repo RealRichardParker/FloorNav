@@ -1,5 +1,5 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { trigger, state, style, animate, keyframes, transition } from '@angular/animations';
+import {Component, OnInit, AfterViewInit} from '@angular/core';
+import {trigger, state, style, animate, keyframes, transition} from '@angular/animations';
 
 @Component({
   selector: 'app-upload',
@@ -20,26 +20,27 @@ import { trigger, state, style, animate, keyframes, transition } from '@angular/
 })
 export class UploadComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.bounceOnce()
+      this.bounceOnce();
     }, 1);
   }
 
-  bounceState : string = "inactive";
+  bounceState: string = 'inactive';
 
   fileToUpload: File = null;
 
-  fileAdded : boolean = false;
+  fileAdded: boolean = false;
 
-  submitted : boolean = false;
+  submitted: boolean = false;
 
-  unOpaque : boolean = true;
+  unOpaque: boolean = true;
 
 
   handleFileInput(files: FileList) {
@@ -47,29 +48,28 @@ export class UploadComponent implements OnInit {
     this.fileAdded = true;
   }
 
-  prepare() : void {
+  prepare(): void {
     this.submitted = true;
   }
 
-  bounceOnce() : void {
-    this.bounceState = "active";
+  bounceOnce(): void {
+    this.bounceState = 'active';
   }
 
-  endBounce() : void {
-    this.bounceState = "inactive";
+  endBounce(): void {
+    this.bounceState = 'inactive';
     this.unOpaque = false;
   }
 
-  onUploadSuccess(event) : void {
+  onUploadSuccess(event): void {
     console.log(event[0]);
     this.fileToUpload = event[0];
     this.fileAdded = true;
   }
 
-  onUploadError(event) : void {
+  onUploadError(event): void {
     console.error(event);
   }
-
 
 
 }
