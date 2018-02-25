@@ -1,6 +1,6 @@
 ///<reference path="../../../node_modules/@angular/core/src/metadata/directives.d.ts"/>
-import {Component, OnInit, Input, AfterViewInit, AfterContentInit, Output, EventEmitter, SimpleChanges } from '@angular/core';
-import { NgClass } from '@angular/common';
+import {Component, OnInit, Input, AfterViewInit, AfterContentInit, Output, EventEmitter, SimpleChanges, OnChanges} from '@angular/core';
+import {NgClass} from '@angular/common';
 import * as astar from 'javascript-astar';
 import {trigger, state, style, animate, keyframes, transition} from '@angular/animations';
 
@@ -29,7 +29,7 @@ const search = astar.astar.search;
     ])
   ]
 })
-export class ProcessComponent implements OnInit {
+export class ProcessComponent implements OnInit, OnChanges {
 
   static outOfRange(a: number, min: number, max: number): boolean {
     return a < min || a >= max;
@@ -43,7 +43,7 @@ export class ProcessComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     for (let propertyName in changes) {
-      if (propertyName == "submitted" && this.submitted == true) {
+      if (propertyName == 'submitted' && this.submitted == true) {
         setTimeout(() => {
           this.fadeOnce();
           this.bounceOnce();
@@ -57,11 +57,11 @@ export class ProcessComponent implements OnInit {
 
   @Input() submitted: boolean;
 
-  canvas : any;
+  canvas: any;
 
-  ctx : any;
+  ctx: any;
 
-  img : any;
+  img: any;
 
   fadeState: string = 'inactive';
 
@@ -118,28 +118,28 @@ export class ProcessComponent implements OnInit {
   RUNMMM() {
     console.log('RUN MMMM');
     this.canvas = <HTMLCanvasElement>document.getElementById('GRORORO');
-    this.ctx =  this.canvas.getContext('2d');
+    this.ctx = this.canvas.getContext('2d');
 
     this.img = new Image;
     this.img.src = this.file.dataURL;
     this.img.onload = () => {
 
       this.canvas.width = this.img.width >> 1;
-      this.canvas.height =this.img.height >> 1;
+      this.canvas.height = this.img.height >> 1;
 
       this.draw();
 
       this.canvas.addEventListener('mouseout', this.draw.bind(this), false);
       this.canvas.addEventListener('mousemove', this.move.bind(this), false);
-    }
+    };
   }
 
-  draw() : void {
+  draw(): void {
     this.ctx.drawImage(this.img, 0, 0, this.img.width >> 1, this.img.height >> 1);
   }
 
   /* this can be optimized more; use proportions and shit */
-  move(e : any) {
+  move(e: any) {
     this.ctx.drawImage(this.img, -e.clientX, -e.clientY, this.img.width + 800, this.img.height + 300);
   }
 
@@ -172,10 +172,10 @@ export class ProcessComponent implements OnInit {
     // Determine distances.
     for (let i = 0; level.length !== 0; i++) {
       const nextLevel = [];
-      for  (const loc of level) {
+      for (const loc of level) {
         for (const pair of adj) {
           if (ProcessComponent.outOfRange(loc.r + pair[0], 0, map.length) ||
-              ProcessComponent.outOfRange(loc.c + pair[1], 0, map[0].length)) {
+            ProcessComponent.outOfRange(loc.c + pair[1], 0, map[0].length)) {
             continue;
           }
           if (dist[loc.r + pair[0]][loc.c + pair[1]] === -1) {
@@ -189,8 +189,6 @@ export class ProcessComponent implements OnInit {
 
     return dist;
   }
-
-
 
 
 }
