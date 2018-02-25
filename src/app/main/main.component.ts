@@ -43,7 +43,7 @@ export class MainComponent implements OnInit, OnChanges {
     for (let propertyName in changes) {
       if (propertyName === 'submitted' && this.submitted === true) {
         setTimeout(() => {
-          this.initCanvas();
+          this.initCanvas.bind(this);
         }, 1);
       }
     }
