@@ -2,7 +2,7 @@
   display: grid;
   min-height: 100%;
   grid-template-columns: 20vw auto 20vw;
-  grid-template-rows: 20vh auto;
+  grid-template-rows: 15vh auto;
   grid-template-areas: "header header"
                        "sidebar content";
 
@@ -12,16 +12,19 @@
 }
 .main {
   grid-area: content;
-  align-self: center;
+  height: 85vh; /* feelsgoodman */
 }
 .move-down {
-  margin-top: 3vh;
-  margin-left: 7vw;
+  margin-top: 75vh !important;
+  margin-bottom: 0vh !important;
 }
 .btn-down {
-  margin-top: 10vh;
+  margin-top: 60vh;
   margin-bottom: 10vh;
 }
 .opaque {
   opacity: 0;
+}
+.slight-margin {
+  margin-top: 1.5vh;
 }

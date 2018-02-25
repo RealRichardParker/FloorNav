@@ -1,4 +1,4 @@
-import { Component, OnInit, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { trigger, state, style, animate, keyframes, transition } from '@angular/animations';
 
 @Component({
@@ -41,6 +41,7 @@ export class UploadComponent implements OnInit {
 
   unOpaque : boolean = true;
 
+
   handleFileInput(files: FileList) {
     this.fileToUpload = files.item(0);
     this.fileAdded = true;
@@ -58,5 +59,13 @@ export class UploadComponent implements OnInit {
     this.bounceState = "inactive";
     this.unOpaque = false;
   }
+
+  onUploadSuccess(event) : void {
+    console.log(event[0]);
+    this.fileToUpload = event[0];
+    this.fileAdded = true;
+  }
+
+
 
 }
