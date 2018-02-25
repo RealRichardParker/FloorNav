@@ -137,6 +137,25 @@ export class ProcessComponent implements OnInit, OnChanges {
     }
   }
 
+  static pixAvr(imageData: any, x: number, y: number, w: number, h: number, thres: number) {
+    let c = 0, sum = 0;
+    for (let dx = 0; dx < w; dx++) {
+      for (let dy = 0; dy < w; dy++) {
+        sum += ProcessComponent.grayPix(imageData, x + dx, y + dy);
+        c++;
+      }
+    }
+    return (sum / c > thres) ? 0xffffff : 0;
+  }
+
+  static grayPix(imageData: any, x: number, y: number): number {
+    const width = imageData.width;
+    const pix = y * (width * 4) + x * 4;
+    const data = imageData.data;
+
+    return (data[pix] + data[pix + 1] + data[pix + 2]) / 3;
+  }
+
   constructor() {
   }
 
@@ -183,10 +202,10 @@ export class ProcessComponent implements OnInit, OnChanges {
     this.bounceState = 'inactive';
     this.unOpaque = false;
   }
-
-  process(): any {
-    // todo: call genGraph after processing image.
-  }
+  //
+  // process(): any {
+  //   // todo: call genGraph after processing image.
+  // }
 
   prepare1(): void {
     this.processingType = 1;
@@ -203,12 +222,49 @@ export class ProcessComponent implements OnInit, OnChanges {
     this.prepare();
   }
 
+  posterize(pixels, thres): ImageData {
+    const factor = Math.min(pixels.width, pixels.height) / 250;
+    const res = this.ctx.createImageData(Math.floor(pixels.width / factor), Math.floor(pixels.height / factor));
+
+    for (let x = 0; x < res.width; x++) {
+      for (let y = 0; y < res.height; y++) {
+        res.data[x][y] = ProcessComponent.pixAvr(pixels, Math.floor(x * factor), Math.floor(y * factor),
+          Math.min(factor, res.width - x), Math.min(factor, res.height - y), thres);
+      }
+    }
+
+    return res;
+  }
+
   prepare(): void {
     this.processSelected = true;
 
+    // Get Image data
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    const img = new Image(this.file.dataURL);
+    canvas.width = img.width;
+    canvas.height = img.height;
+    context.drawImage(img, 0, 0 );
+    let pixels = context.getImageData(0, 0, img.width, img.height);
+
+    ProcessComponent.sharpen(pixels, true);
+    pixels = this.posterize(pixels, 200);
+
+    this.canvas.width = pixels.width;
+    this.canvas.height = pixels.height;
+    this.ctx.drawImage(pixels, 0, 0);
     this.ocr();
+
+    pixels = this.ctx.getImageData(0, 0, pixels.width, pixels.height);
+    this.genGraph(this.imageToBool(pixels));
+
     console.log(this.processSelected);
     this.endPulse();
+  }
+
+  removeColor(): void {
+
   }
 
   permitShow(): boolean {
@@ -247,20 +303,20 @@ export class ProcessComponent implements OnInit, OnChanges {
     this.ctx.drawImage(this.img, -e.clientX, -e.clientY, this.img.width + 800, this.img.height + 300);
   }
 
-  imageToBool(width, height): Array<Array<boolean>> {
-    let data = this.ctx.getImageData(0, 0, width, height);
+  imageToBool(pixels): Array<Array<boolean>> {
+    let data = pixels;
     let map = [];
-    for (let r = 0; r < height; r++) {
+    for (let r = 0; r < pixels.height; r++) {
       map[r] = [];
-      for (let c = 0; c < width; c++) {
-        map[r][c] = data.data[r * height * 4 + c * 4];
+      for (let c = 0; c < pixels.width; c++) {
+        map[r][c] = data.data[r * pixels.width * 4 + c * 4];
       }
     }
 
     return map;
   }
 
-  genGraph(map: Array<Array<boolean>>) {
+  genGraph(map: Array<Array<boolean>>): void {
 
     const adj = [[-1, 0], [1, 0], [0, -1], [0, 1]];
     const visited = [];
@@ -305,9 +361,9 @@ export class ProcessComponent implements OnInit, OnChanges {
   ocr() {
 
     let tesseractPromise: any;
-    tesseractPromise = tesseract.recognize(this.file.dataURL, {lang: 'eng'})
+    tesseractPromise = tesseract.recognize(this.canvas, {lang: 'eng'})
       .progress(message => console.log('current progress: ', message))
-    let tesseractPromise = tesseract.recognize(this.file.dataURL, {lang: 'eng'})
+    tesseractPromise = tesseract.recognize(this.canvas, {lang: 'eng'})
       .progress(message => console.log("current progress: ", message))
       .then(result => {
         this.parseTesseractResults(result);
