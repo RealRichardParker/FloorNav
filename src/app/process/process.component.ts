@@ -67,6 +67,11 @@ export class ProcessComponent implements OnInit {
 
   bounceState: string = 'inactive';
 
+  //1 for sharp, 2 for blurry, 3 for dirty
+  processingType : number;
+
+  processSelected : boolean = false;
+
   unOpaque: boolean = true;
 
   fadeOnce(): void {
@@ -89,6 +94,25 @@ export class ProcessComponent implements OnInit {
 
   process(): any {
 
+  }
+
+  prepare1() : void {
+    this.processingType = 1;
+    this.prepare();
+  }
+
+  prepare2() : void {
+    this.processingType = 2;
+    this.prepare();
+  }
+
+  prepare3() : void {
+    this.processingType = 3;
+    this.prepare();
+  }
+
+  prepare() : void {
+    this.processSelected = true;
   }
 
   RUNMMM() {

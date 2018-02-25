@@ -1,11 +1,11 @@
 <div *ngIf=(this.submitted) id="overall">
   <!-- to do: animate button entrances? can do -->
   <div class="buttons" [@fadeIn]="fadeState" (@fadeIn.done)="endFade()" [ngClass]="{'opaque': unOpaque}">
-    <button class="standard-button hvr-bounce-in">Sharp</button>
+    <button class="standard-button hvr-bounce-in" (click)="prepare1()">Sharp</button>
     <br>
-    <button class="standard-button hvr-bounce-in">Blurry</button>
+    <button class="standard-button hvr-bounce-in" (click)="prepare2()">Blurry</button>
     <br>
-    <button class="standard-button hvr-bounce-in bot-marg">Dirty</button>
+    <button class="standard-button hvr-bounce-in bot-marg" (click)="prepare3()">Dirty</button>
   </div>
 
   <div class="header text-center marg-top display-3" [@bounceInDown]="bounceState" (@bounceInDown.done)="endBounce()">
@@ -17,3 +17,5 @@
     </canvas>
   </div>
 </div>
+
+<app-main></app-main>
