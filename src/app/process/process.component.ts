@@ -255,7 +255,8 @@ export class ProcessComponent implements OnInit, OnChanges {
 
   drawRect() {
     //console.log(coordsArr);
-    let imgData = this.ctx.ImageData(0, 0, this.img.width, this.img.height);
+   // console.log(this.ctx.ImageData);
+    let imgData = this.ctx.getImageData(0, 0, this.img.width, this.img.height);
     let data = imgData.data;
 
     //y * width + x
@@ -266,12 +267,14 @@ export class ProcessComponent implements OnInit, OnChanges {
       let leftY = obj.upperLeftY;
       let rightX = obj.lowerRightX;
       let rightY = obj.lowerRightY;
-      for(let i = (leftY * this.canvas.width) + leftX; i < (rightY * this.canvas.width + rightX); i += 4)
+      this.ctx.fillStyle="#000000";
+      this.ctx.fillRect(leftX, leftY, rightX - leftX, rightY - rightY);
+      /*for(let i = (leftY * this.canvas.width) + leftX; i < (rightY * this.canvas.width + rightX); i += 4)
       {
         data[i] = 0;
         data[i + 1] = 0;
         data[i + 2] = 0;
-      }
+      }*/
       this.ctx.putImageData(imgData, 0, 0);
     }
   }
@@ -286,7 +289,7 @@ export class ProcessComponent implements OnInit, OnChanges {
               if (json.attributes[nextKey].value == "ocr_line")
                 break;
               if (json.attributes[nextKey].key == 'title') {
-                console.log(json.attributes[nextKey].value);
+                //console.log(json.attributes[nextKey].value);
                 let arr = json.attributes[nextKey].value.split(" ");
                 this.coordsArr.push({
                   "upperLeftX": arr[1],
