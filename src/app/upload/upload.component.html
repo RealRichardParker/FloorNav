@@ -15,7 +15,7 @@
 
   <div class="main text-center">
     <div class="text-center">
-      <button class="btn btn-success btn-lg btn-down" [disabled]="!fileAdded" (click)="prepare()" [ngClass]="{'move-down' : fileAdded}">Process
+      <button class="btn btn-success btn-lg btn-down" [disabled]="!fileAdded" (click)="prepare()" [ngClass]="{'move-down' : fileAdded}" [@pulse]="pulseState" (@pulse.done)="endPulse()">Process
       </button>
     </div>
 

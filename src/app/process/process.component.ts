@@ -22,7 +22,7 @@ const search = astar.astar.search;
       ]))),
     ]),
     trigger('fadeIn', [
-      transition('inactive => active', animate(750, keyframes([
+      transition('inactive => active', animate(500, keyframes([
         style({opacity: 0, transform: 'translate3d(-100%, 0, 0)'}),
         style({opacity: 1, transform: 'translate3d(0, 0, 0)'}),
       ]))),
@@ -46,6 +46,7 @@ export class ProcessComponent implements OnInit {
       if (propertyName == "submitted" && this.submitted == true) {
         setTimeout(() => {
           this.fadeOnce();
+          this.bounceOnce();
           this.RUNMMM();
         }, 1);
       }
@@ -64,6 +65,8 @@ export class ProcessComponent implements OnInit {
 
   fadeState: string = 'inactive';
 
+  bounceState: string = 'inactive';
+
   unOpaque: boolean = true;
 
   fadeOnce(): void {
@@ -72,6 +75,15 @@ export class ProcessComponent implements OnInit {
 
   endFade(): void {
     this.fadeState = 'inactive';
+    this.unOpaque = false;
+  }
+
+  bounceOnce(): void {
+    this.bounceState = 'active';
+  }
+
+  endBounce(): void {
+    this.bounceState = 'inactive';
     this.unOpaque = false;
   }
 

@@ -1,4 +1,4 @@
-import {Component, OnInit, AfterViewInit} from '@angular/core';
+import {Component, OnInit, AfterViewInit, SimpleChanges } from '@angular/core';
 import {trigger, state, style, animate, keyframes, transition} from '@angular/animations';
 
 @Component({
@@ -15,6 +15,13 @@ import {trigger, state, style, animate, keyframes, transition} from '@angular/an
         style({transform: 'scale3d(0.97, 0.97, 0.97)', offset: 0.8}),
         style({opacity: 1, transform: 'scale3d(1, 1, 1)', offset: 1}),
       ]))),
+    ]),
+    trigger('pulse', [
+      transition('inactive => active', animate(1000, keyframes([
+        style({transform: 'scale3d(1, 1, 1)', offset: 0}),
+        style({transform: 'scale3d(1.05, 1.05, 1.05)', offset: 0.5}),
+        style({transform: 'scale3d(1, 1, 1)', offset: 1}),
+      ]))),
     ])
   ]
 })
@@ -24,6 +31,11 @@ export class UploadComponent implements OnInit {
   }
 
   ngOnInit() {
+    let interval = setInterval(() => {
+      if (this.fileAdded == true) {
+        this.startPulse();
+        clearInterval(interval);
+    }}, 2000);
   }
 
   ngAfterViewInit() {
@@ -33,6 +45,8 @@ export class UploadComponent implements OnInit {
   }
 
   bounceState: string = 'inactive';
+
+  pulseState: string = "inactive";
 
   fileToUpload: File = null;
 
@@ -59,6 +73,19 @@ export class UploadComponent implements OnInit {
   endBounce(): void {
     this.bounceState = 'inactive';
     this.unOpaque = false;
+  }
+
+  startPulse() : void {
+    this.pulseState = 'active';
+  }
+
+  endPulse(): void {
+    this.pulseState = 'inactive';
+    if (this.fileAdded) {
+      setTimeout(() => {
+        this.startPulse();
+      }, 1000);
+    }
   }
 
   onUploadSuccess(event): void {
