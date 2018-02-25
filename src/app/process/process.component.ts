@@ -38,6 +38,13 @@ const search = astar.astar.search;
         style({opacity: 0, transform: 'translate3d(-100%, 0, 0)'}),
         style({opacity: 1, transform: 'translate3d(0, 0, 0)'}),
       ]))),
+    ]),
+    trigger('pulse', [
+      transition('inactive => active', animate(1000, keyframes([
+        style({transform: 'scale3d(1, 1, 1)', offset: 0}),
+        style({transform: 'scale3d(1.05, 1.05, 1.05)', offset: 0.5}),
+        style({transform: 'scale3d(1, 1, 1)', offset: 1}),
+      ]))),
     ])
   ]
 })
@@ -82,6 +89,8 @@ export class ProcessComponent implements OnInit, OnChanges {
 
   bounceState: string = 'inactive';
 
+  pulseState: string = "inactive";
+
   //1 for sharp, 2 for blurry, 3 for dirty
   processingType: number;
 
@@ -90,6 +99,17 @@ export class ProcessComponent implements OnInit, OnChanges {
   processComplete : boolean = false;
 
   unOpaque: boolean = true;
+
+  startPulse() : void {
+    this.pulseState = 'active';
+  }
+
+  endPulse(): void {
+    this.pulseState = 'inactive';
+    setTimeout(() => {
+      this.startPulse();
+    }, 1500);
+  }
 
   fadeOnce(): void {
     this.fadeState = 'active';
@@ -131,10 +151,15 @@ export class ProcessComponent implements OnInit, OnChanges {
   prepare(): void {
     this.processSelected = true;
     console.log(this.processSelected);
+    this.endPulse();
   }
 
   permitShow() : boolean {
     return this.submitted && !this.processSelected;
+  }
+
+  processLoading() : boolean {
+    return this.processSelected && !this.processComplete;
   }
 
   RUNMMM() {

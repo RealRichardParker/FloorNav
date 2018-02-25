@@ -73,7 +73,8 @@
 }
 
 .spinner {
-  margin: 300px auto;
+  margin-top: 300px;
+  margin-left: 47.5vw;
   width: 80px;
   height: 80px;
   position: relative;
@@ -95,7 +96,9 @@
   -webkit-animation-delay: -0.9s;
   animation-delay: -0.9s;
 }
-
+.locateCorrect {
+  margin-top: 5vh;
+}
 @-webkit-keyframes sk-cubemove {
   25% { -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5) }
   50% { -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg) }
