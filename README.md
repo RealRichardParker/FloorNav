@@ -21,15 +21,17 @@ Once the user uploads the floor plan, they can select a button to signify the qu
 ## Challenges we ran into
 Deciding on a proper development environment was quite a challenge for us. The initial idea was way out of our scope, and we had to limit our scope some. We started working in Unity for easy porting to Web, iOS, and Android, but we quickly realized that Unity was too complex for what we wanted to do. We eventually decided, after much debate, to switch frameworks to Angular CLI and build our application as a Webapp.
 
---GAHWON and HENRY talk about generating the room-find algorithm
+<!--GAHWON and HENRY talk about generating the room-find algorithm-->
 
-Several hardware issues came about during our development cycle. One of team members accidentally messed up the core dependencies for several of the necessary libraries and packages and spent several hours reinstalling and repairing various versions of Visual Studio.
+Several hardware issues came about during our development cycle. One of team members accidentally messed up the core dependencies for several of the necessary libraries and packages and spent several hours reinstalling and repairing various versions of Visual Studio. Next time we hope this team member manages his dependencies better.
 
 ## Accomplishments that we're proud of
-Coming up with the algorithm to convert a picture of a floor plan into a graph is something we are all incredibly proud of. --HENRY/GAHWON elaborate more
+Coming up with the algorithm to convert a picture of a floor plan into a graph is something we are all incredibly proud of. <!--HENRY/GAHWON elaborate more-->
 
---MATTHEW if you want to add anything
+Working on such an extensive project, with so many elements, for the first time was a thrillingly difficult challenge, and managing and putting together each aspect was deeply rewarding, especially when the project came together at the end.
+
 ## What we learned
+We were all learned how to build a Webapp using Angular 2 and discovered the challenges of group projects: merge conflicts. We leaned about Ramer–Douglas–Peucker algorithm and how to implement it. We discovered how to do image processing and the associated difficulties involved with such an undertaking. 
 
 ## What's next for FloorNav
 Our original idea still stands. We hope to one day develop an AR system that can show the user's location on the map which will bring about live directions like a GPS or Google Maps can. This functionality was entirely of our project scope for this event as we lacked both the hardware and experience to implement AR. 
