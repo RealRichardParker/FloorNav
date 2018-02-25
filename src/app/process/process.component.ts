@@ -63,7 +63,7 @@ export class ProcessComponent implements OnInit, OnChanges {
 
   map: astar.Graph;
 
-  coordsArr: Array<any>;
+  coordsArr: Array<any> = [];
 
   fadeState = 'inactive';
 
@@ -289,12 +289,6 @@ export class ProcessComponent implements OnInit, OnChanges {
       let rightY = obj.lowerRightY;
       this.ctx.fillStyle="#000000";
       this.ctx.fillRect(leftX, leftY, rightX - leftX, rightY - rightY);
-      /*for(let i = (leftY * this.canvas.width) + leftX; i < (rightY * this.canvas.width + rightX); i += 4)
-      {
-        data[i] = 0;
-        data[i + 1] = 0;
-        data[i + 2] = 0;
-      }*/
       this.ctx.putImageData(imgData, 0, 0);
     }
   }
