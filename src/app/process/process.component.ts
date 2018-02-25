@@ -20,7 +20,6 @@ const options = {
 };
 
 const Graph = astar.Graph;
-const search = astar.astar.search;
 
 @Component({
   selector: 'app-process',
@@ -41,10 +40,45 @@ const search = astar.astar.search;
         style({opacity: 0, transform: 'translate3d(-100%, 0, 0)'}),
         style({opacity: 1, transform: 'translate3d(0, 0, 0)'}),
       ]))),
+    ]),
+    trigger('pulse', [
+      transition('inactive => active', animate(1000, keyframes([
+        style({transform: 'scale3d(1, 1, 1)', offset: 0}),
+        style({transform: 'scale3d(1.05, 1.05, 1.05)', offset: 0.5}),
+        style({transform: 'scale3d(1, 1, 1)', offset: 1}),
+      ]))),
     ])
   ]
 })
 export class ProcessComponent implements OnInit, OnChanges {
+  @Input() file: any;
+
+  @Input() submitted: boolean;
+
+  canvas: any;
+
+  ctx: any;
+
+  img: any;
+
+  map: astar.Graph;
+
+  coordsArr: Array<any>;
+
+  fadeState = 'inactive';
+
+  bounceState = 'inactive';
+
+  pulseState: string = "inactive";
+
+  // 1 for sharp, 2 for blurry, 3 for dirty
+  processingType: number;
+
+  processSelected = false;
+
+  processComplete = false;
+
+  unOpaque = true;
 
   static outOfRange(a: number, min: number, max: number): boolean {
     return a < min || a >= max;
@@ -68,30 +102,16 @@ export class ProcessComponent implements OnInit, OnChanges {
     }
   }
 
-  @Input() file: any;
+  startPulse() : void {
+    this.pulseState = 'active';
+  }
 
-  @Input() submitted: boolean;
-
-  canvas: any;
-
-  ctx: any;
-
-  img: any;
-
-  coordsArr: Array<any> = [];
-
-  fadeState: string = 'inactive';
-
-  bounceState: string = 'inactive';
-
-  //1 for sharp, 2 for blurry, 3 for dirty
-  processingType: number;
-
-  processSelected: boolean = false;
-
-  processComplete : boolean = false;
-
-  unOpaque: boolean = true;
+  endPulse(): void {
+    this.pulseState = 'inactive';
+    setTimeout(() => {
+      this.startPulse();
+    }, 1500);
+  }
 
   fadeOnce(): void {
     this.fadeState = 'active';
@@ -112,7 +132,7 @@ export class ProcessComponent implements OnInit, OnChanges {
   }
 
   process(): any {
-
+    // todo: call genGraph after processing image.
   }
 
   prepare1(): void {
@@ -134,10 +154,15 @@ export class ProcessComponent implements OnInit, OnChanges {
     this.processSelected = true;
     this.ocr();
     console.log(this.processSelected);
+    this.endPulse();
   }
 
-  permitShow() : boolean {
+  permitShow(): boolean {
     return this.submitted && !this.processSelected;
+  }
+
+  processLoading() : boolean {
+    return this.processSelected && !this.processComplete;
   }
 
   RUNMMM() {
@@ -168,12 +193,7 @@ export class ProcessComponent implements OnInit, OnChanges {
     this.ctx.drawImage(this.img, -e.clientX, -e.clientY, this.img.width + 800, this.img.height + 300);
   }
 
-
-  shortest(map: Array<Array<boolean>>, start: number, end: number) {
-    // todo:
-  }
-
-  rooms(map: Array<Array<boolean>>): Array<Array<number>> {
+  genGraph(map: Array<Array<boolean>>) {
 
     const adj = [[-1, 0], [1, 0], [0, -1], [0, 1]];
     const visited = [];
@@ -212,7 +232,7 @@ export class ProcessComponent implements OnInit, OnChanges {
       level = nextLevel;
     }
 
-    return dist;
+    this.map = new Graph(dist);
   }
 
   ocr() {
@@ -234,10 +254,10 @@ export class ProcessComponent implements OnInit, OnChanges {
   }
 
   parseTesseractResults(result) {
-    //console.log(result);
-    //console.log(result.html);
+    // console.log(result);
+    // console.log(result.html);
 
-    //himalaya works, cannot access members
+    // himalaya works, cannot access members
     let json = himalaya.parse(result.html);
     let promise = this.searchJson(json);
     /*promise.resolve(result => {
@@ -259,7 +279,7 @@ export class ProcessComponent implements OnInit, OnChanges {
     let imgData = this.ctx.getImageData(0, 0, this.img.width, this.img.height);
     let data = imgData.data;
 
-    //y * width + x
+    // y * width + x
     console.log(this.coordsArr);
     for (let val in this.coordsArr) {
       let obj = this.coordsArr[val];

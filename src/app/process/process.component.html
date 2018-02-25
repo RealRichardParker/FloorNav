@@ -18,11 +18,16 @@
   </div>
 </div>
 
-<div *ngIf=(this.processSelected)>
+<div *ngIf=processLoading()>
   <div class="spinner">
     <div class="cube1"></div>
     <div class="cube2"></div>
   </div>
+
+  <div class='display-1 locateCorrect text-center' [@pulse]="pulseState" (@pulse.done)="endPulse()">
+    Loading...
+  </div>
+
 </div>
 
-<app-main [show]=processComplete [submitted]=submmited [file]=file></app-main>
+<app-main [map]=map [show]=processComplete [submitted]=submitted [file]=file></app-main>
