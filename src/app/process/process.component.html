@@ -18,6 +18,11 @@
   </div>
 </div>
 
-<div *ngIf=(this.processSelected)>Hello world~</div>
+<div *ngIf=(this.processSelected)>
+  <div class="spinner">
+    <div class="cube1"></div>
+    <div class="cube2"></div>
+  </div>
+</div>
 
 <app-main [show]=processComplete [submitted]=submmited [file]=file></app-main>
