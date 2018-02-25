@@ -20,7 +20,7 @@ function getCanvas(w, h) {
   return c;
 }
 
-function convolute(pixels, weights, opaque) {
+function convolute(ctx, pixels, weights, opaque) {
   var side = Math.round(Math.sqrt(weights.length));
   var halfSide = Math.floor(side / 2);
   var src = pixels.data;
@@ -29,7 +29,7 @@ function convolute(pixels, weights, opaque) {
   // pad output by the convolution matrix
   var w = sw;
   var h = sh;
-  var output = Filters.createImageData(w, h);
+  var output = ctx.createImageData(w, h);
   var dst = output.data;
   // go through the destination image pixels
   var alphaFac = opaque ? 1 : 0;

@@ -15,8 +15,9 @@ import * as astar from 'javascript-astar';
 import {trigger, state, style, animate, keyframes, transition} from '@angular/animations';
 import * as tesseract from 'tesseract.js';
 import * as himalaya from 'himalaya';
+
 const options = {
-  langPath: "tessdata" // Or wherever your downloaded langs are stored
+  langPath: 'tessdata' // Or wherever your downloaded langs are stored
 };
 
 const Graph = astar.Graph;
@@ -69,7 +70,7 @@ export class ProcessComponent implements OnInit, OnChanges {
 
   bounceState = 'inactive';
 
-  pulseState: string = "inactive";
+  pulseState: string = 'inactive';
 
   // 1 for sharp, 2 for blurry, 3 for dirty
   processingType: number;
@@ -82,6 +83,58 @@ export class ProcessComponent implements OnInit, OnChanges {
 
   static outOfRange(a: number, min: number, max: number): boolean {
     return a < min || a >= max;
+  }
+
+  static sharpen(pixels, opaque) {
+    const weights =
+      [0, -1, 0,
+        -1, 5, -1,
+        0, -1, 0];
+    let side = Math.round(Math.sqrt(weights.length));
+    let halfSide = Math.floor(side / 2);
+    let src = pixels.data;
+    let sw = pixels.width;
+    let sh = pixels.height;
+    // pad output by the convolution matrix
+    let w = sw;
+    let h = sh;
+
+    let dst = [];
+
+    // go through the destination image pixels
+    let alphaFac = opaque ? 1 : 0;
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        let sy = y;
+        let sx = x;
+        let dstOff = (y * w + x) * 4;
+        // calculate the weighed sum of the source image pixels that
+        // fall under the convolution matrix
+        let r = 0, g = 0, b = 0, a = 0;
+        for (let cy = 0; cy < side; cy++) {
+          for (let cx = 0; cx < side; cx++) {
+            let scy = sy + cy - halfSide;
+            let scx = sx + cx - halfSide;
+            if (scy >= 0 && scy < sh && scx >= 0 && scx < sw) {
+              let srcOff = (scy * sw + scx) * 4;
+              let wt = weights[cy * side + cx];
+              r += src[srcOff] * wt;
+              g += src[srcOff + 1] * wt;
+              b += src[srcOff + 2] * wt;
+              a += src[srcOff + 3] * wt;
+            }
+          }
+        }
+        dst[dstOff] = r;
+        dst[dstOff + 1] = g;
+        dst[dstOff + 2] = b;
+        dst[dstOff + 3] = a + alphaFac * (255 - a);
+      }
+    }
+
+    for (let i = 0; i < src.length; i++) {
+      src[i] = dst[i];
+    }
   }
 
   constructor() {
@@ -102,7 +155,7 @@ export class ProcessComponent implements OnInit, OnChanges {
     }
   }
 
-  startPulse() : void {
+  startPulse(): void {
     this.pulseState = 'active';
   }
 
@@ -152,6 +205,7 @@ export class ProcessComponent implements OnInit, OnChanges {
 
   prepare(): void {
     this.processSelected = true;
+
     this.ocr();
     console.log(this.processSelected);
     this.endPulse();
@@ -161,7 +215,7 @@ export class ProcessComponent implements OnInit, OnChanges {
     return this.submitted && !this.processSelected;
   }
 
-  processLoading() : boolean {
+  processLoading(): boolean {
     return this.processSelected && !this.processComplete;
   }
 
@@ -237,6 +291,9 @@ export class ProcessComponent implements OnInit, OnChanges {
 
   ocr() {
 
+    let tesseractPromise: any;
+    tesseractPromise = tesseract.recognize(this.file.dataURL, {lang: 'eng'})
+      .progress(message => console.log('current progress: ', message))
     let tesseractPromise = tesseract.recognize(this.file.dataURL, {lang: 'eng'})
       .progress(message => console.log("current progress: ", message))
       .then(result => {
@@ -244,10 +301,10 @@ export class ProcessComponent implements OnInit, OnChanges {
         this.drawRect();
       })
       .catch(rejected => {
-        console.log("err with tesseractJob")
+        console.log('err with tesseractJob');
       })
       .finally(failure => {
-        console.log("completed");
+        console.log('completed');
         this.processComplete = true;
       });
   }
@@ -263,7 +320,7 @@ export class ProcessComponent implements OnInit, OnChanges {
 
   drawRect() {
     //console.log(coordsArr);
-   // console.log(this.ctx.ImageData);
+    // console.log(this.ctx.ImageData);
     let imgData = this.ctx.getImageData(0, 0, this.img.width, this.img.height);
 
     // y * width + x
@@ -274,7 +331,7 @@ export class ProcessComponent implements OnInit, OnChanges {
       let leftY = obj.upperLeftY;
       let rightX = obj.lowerRightX;
       let rightY = obj.lowerRightY;
-      this.ctx.fillStyle="#000000";
+      this.ctx.fillStyle = '#ffffffff';
       this.ctx.fillRect(leftX, leftY, rightX - leftX, rightY - rightY);
       this.ctx.putImageData(imgData, 0, 0);
     }
@@ -283,20 +340,20 @@ export class ProcessComponent implements OnInit, OnChanges {
   searchJson(json) {
     for (let key in json) {
       if (json.hasOwnProperty(key)) {
-        if (json[key] == "span") {
+        if (json[key] == 'span') {
           for (let nextKey in json.attributes) {
             if (json.attributes.hasOwnProperty(nextKey)) {
-              if (json.attributes[nextKey].value == "ocr_line")
+              if (json.attributes[nextKey].value == 'ocr_line')
                 break;
               if (json.attributes[nextKey].key == 'title') {
                 //console.log(json.attributes[nextKey].value);
-                let arr = json.attributes[nextKey].value.split(" ");
+                let arr = json.attributes[nextKey].value.split(' ');
                 this.coordsArr.push({
-                  "upperLeftX": arr[1],
-                  "upperLeftY": arr[2],
-                  "lowerRightX": arr[3],
-                  "lowerRightY": arr[4]
-                })
+                  'upperLeftX': arr[1],
+                  'upperLeftY': arr[2],
+                  'lowerRightX': arr[3],
+                  'lowerRightY': arr[4]
+                });
               }
             }
           }
