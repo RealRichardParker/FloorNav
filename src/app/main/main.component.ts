@@ -1,4 +1,8 @@
 import {Component, OnInit, Input, SimpleChanges, OnChanges} from '@angular/core';
+import * as astar from 'javascript-astar';
+
+const Graph = astar.Graph;
+const search = astar.astar.search;
 
 @Component({
   selector: 'app-main',
@@ -12,7 +16,7 @@ export class MainComponent implements OnInit, OnChanges {
 
   @Input() submitted: boolean;
 
-  @Input() map: Array<Array<number>>;
+  @Input() map: astar.Graph;
 
   @Input() file: any;
 
@@ -23,6 +27,8 @@ export class MainComponent implements OnInit, OnChanges {
   img: any;
 
   points: Array<any>;
+
+  path: Array<any>;
 
   static dist(x, y, a, b): number {
     return (x - a) * (x - a) + (y - b) * (y - b);
@@ -60,11 +66,19 @@ export class MainComponent implements OnInit, OnChanges {
   }
 
   draw(): void {
+    // call astar
+    if (this.points.length >= 2) {
+      this.ctx.fillStyle = 'while';
+      this.ctx.fillRect(0, 0, this.img.width, this.img.height);
+
+      this.astar();
+    }
+
     this.ctx.drawImage(this.img, 0, 0, this.img.width, this.img.height);
 
     // draw navigation lines
     if (this.points.length >= 2) {
-      this.astar();
+      this.drawPath();
     }
 
     // draw points
@@ -75,24 +89,32 @@ export class MainComponent implements OnInit, OnChanges {
       this.ctx.arc(item.x, item.y, radius, 0, 2 * Math.PI, false);
       this.ctx.fillStyle = 'green';
       this.ctx.fill();
-      this.ctx.lineWidth = 5;
+      this.ctx.lineWidth = 2;
       this.ctx.strokeStyle = '#003300';
       this.ctx.stroke();
     });
   }
 
   astar(): void {
+    const start = this.map.grid[this.points[0].x][this.points[0].y];
+    const end = this.map.grid[this.points[1].x][this.points[1].y];
+    this.path = search(this.map, start, end);
+  }
 
+  drawPath(): void {
+    // todo
   }
 
   click(event): void {
+    const radius = 5;
+
     const x = event.offsetX;
     const y = event.offsetY;
 
     // find all points that are too close and remove them
     if (this.points.length > 0) {
       for (let i = this.points.length - 1; i >= 0; i--) {
-        if (MainComponent.dist(x, y, this.points[i].x, this.points[i].y) < 5) { // todo
+        if (MainComponent.dist(x, y, this.points[i].x, this.points[i].y) < radius) {
           this.points.splice(i, 1);
           return;
         }
