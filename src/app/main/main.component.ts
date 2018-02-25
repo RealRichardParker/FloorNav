@@ -168,7 +168,7 @@ export class MainComponent implements OnInit, OnChanges {
     // find all points that are too close and remove them
     if (this.points.length > 0) {
       for (let i = this.points.length - 1; i >= 0; i--) {
-        if (MainComponent.dist(x, y, this.points[i].x, this.points[i].y) < radius) {
+        if (MainComponent.dist(x, y, this.points[i].x, this.points[i].y) < radius * radius * 2) {
           this.points.splice(i, 1);
           return;
         }
@@ -176,7 +176,7 @@ export class MainComponent implements OnInit, OnChanges {
     }
 
     // queue can only hold 2 elements
-    while (this.points.length > 2) {
+    while (this.points.length >= 2) {
       this.points.shift();
     }
 

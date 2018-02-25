@@ -223,7 +223,7 @@ export class ProcessComponent implements OnInit, OnChanges {
   }
 
   posterize(pixels, thres): ImageData {
-    const factor = Math.min(pixels.width, pixels.height) / 250;
+    const factor = Math.min(Math.min(pixels.width, pixels.height) / 250, 1);
     const res = this.ctx.createImageData(Math.floor(pixels.width / factor), Math.floor(pixels.height / factor));
 
     for (let x = 0; x < res.width; x++) {
@@ -248,7 +248,7 @@ export class ProcessComponent implements OnInit, OnChanges {
     let pixels = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
 
     ProcessComponent.sharpen(pixels, true);
-    pixels = this.posterize(pixels, 50);
+    pixels = this.posterize(pixels, 100);
 
     const small = <HTMLCanvasElement>document.createElement('canvas');
     const ctx = small.getContext('2d');
