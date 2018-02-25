@@ -1,5 +1,15 @@
 ///<reference path="../../../node_modules/@angular/core/src/metadata/directives.d.ts"/>
-import {Component, OnInit, Input, AfterViewInit, AfterContentInit, Output, EventEmitter, SimpleChanges, OnChanges} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  AfterViewInit,
+  AfterContentInit,
+  Output,
+  EventEmitter,
+  SimpleChanges,
+  OnChanges
+} from '@angular/core';
 import {NgClass} from '@angular/common';
 import * as astar from 'javascript-astar';
 import {trigger, state, style, animate, keyframes, transition} from '@angular/animations';
@@ -72,9 +82,9 @@ export class ProcessComponent implements OnInit, OnChanges {
   bounceState: string = 'inactive';
 
   //1 for sharp, 2 for blurry, 3 for dirty
-  processingType : number;
+  processingType: number;
 
-  processSelected : boolean = false;
+  processSelected: boolean = false;
 
   unOpaque: boolean = true;
 
@@ -100,22 +110,22 @@ export class ProcessComponent implements OnInit, OnChanges {
 
   }
 
-  prepare1() : void {
+  prepare1(): void {
     this.processingType = 1;
     this.prepare();
   }
 
-  prepare2() : void {
+  prepare2(): void {
     this.processingType = 2;
     this.prepare();
   }
 
-  prepare3() : void {
+  prepare3(): void {
     this.processingType = 3;
     this.prepare();
   }
 
-  prepare() : void {
+  prepare(): void {
     this.processSelected = true;
   }
 
@@ -232,11 +242,10 @@ export class ProcessComponent implements OnInit, OnChanges {
 
   drawRect() {
     //console.log(coordsArr);
+    let imgData = this.ctx.ImageData(0, 0, this.canvas.width, this.canvas.height);
+    let data = imgData.data;
 
-   /* let canvas = createCanvas();
-    let ctx = canvas.getContext('2d');
-    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    let data = imageData.data;*/
+    //y * width + x
     console.log(this.coordsArr);
     for (let val in this.coordsArr) {
       let obj = this.coordsArr[val];
@@ -244,7 +253,13 @@ export class ProcessComponent implements OnInit, OnChanges {
       let leftY = obj.upperLeftY;
       let rightX = obj.lowerRightX;
       let rightY = obj.lowerRightY;
-      console.log(leftX);
+      for(let i = (leftY * this.canvas.width) + leftX; i < (rightY * this.canvas.width + rightX); i += 4)
+      {
+        data[i] = 0;
+        data[i + 1] = 0;
+        data[i + 2] = 0;
+      }
+      this.ctx.putImageData(imgData, 0, 0);
     }
   }
 
