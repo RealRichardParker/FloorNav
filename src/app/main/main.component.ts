@@ -99,10 +99,16 @@ export class MainComponent implements OnInit, OnChanges {
     const start = this.map.grid[this.points[0].x][this.points[0].y];
     const end = this.map.grid[this.points[1].x][this.points[1].y];
     this.path = search(this.map, start, end);
+
+    // todo: path smoothing
   }
 
   drawPath(): void {
-    // todo
+    if (!this.path || this.path.length === 0) {
+      // todo: no path found :(
+    } else {
+
+    }
   }
 
   click(event): void {
@@ -127,6 +133,7 @@ export class MainComponent implements OnInit, OnChanges {
     }
 
     // add point to canvas
+    // todo: process better coord for point
     this.points.push({x: x, y: y});
     this.draw();
   }
