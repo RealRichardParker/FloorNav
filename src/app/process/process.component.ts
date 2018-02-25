@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { NgClass } from '@angular/common';
 import * as astar from 'javascript-astar';
 
 const Graph = astar.Graph;
@@ -20,7 +21,7 @@ export class ProcessComponent implements OnInit {
   ngOnInit() {
   }
 
-  @Input() file: boolean;
+  @Input() file: any;
 
   @Input() submitted: boolean;
 

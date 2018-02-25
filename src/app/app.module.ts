@@ -6,13 +6,15 @@ import { DropzoneModule } from 'ngx-dropzone-wrapper';
 import { DROPZONE_CONFIG } from 'ngx-dropzone-wrapper';
 import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
 
+import { NgvasModule, tweens, hitAreas } from "ngvas";
+
 import { AppComponent } from './app.component';
 import { UploadComponent } from './upload/upload.component';
 import { ProcessComponent } from './process/process.component';
 
 const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
  // Change this to your upload POST address:
-  url: 'https://httpbin.org/post',
+  url: 'https://putsreq.com/AjhZYZXZ84yAUYIHknow',
   maxFilesize: 50,
   acceptedFiles: 'image/*'
 };
@@ -27,6 +29,7 @@ const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
     BrowserModule,
     BrowserAnimationsModule,
     DropzoneModule,
+    NgvasModule,
   ],
   providers: [
     {

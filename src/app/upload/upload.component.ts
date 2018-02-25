@@ -66,6 +66,10 @@ export class UploadComponent implements OnInit {
     this.fileAdded = true;
   }
 
+  onUploadError(event) : void {
+    console.error(event);
+  }
+
 
 
 }
