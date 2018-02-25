@@ -1,9 +1,10 @@
 <div *ngIf=(submitted) id="overall">
-
   <!-- to do: animate button entrances? can do -->
   <div class="buttons">
-    <button class="standard-button hvr-bounce-in">Sharp</button><br>
-    <button class="standard-button hvr-bounce-in">Blurry</button><br>
+    <button class="standard-button hvr-bounce-in" (click)="RUNMMM()">Sharp</button>
+    <br>
+    <button class="standard-button hvr-bounce-in">Blurry</button>
+    <br>
     <button class="standard-button hvr-bounce-in bot-marg">Dirty</button>
   </div>
 
@@ -14,7 +15,7 @@
   <div class="main img-wrapper">
     <img src={{file.dataURL}}>
 
-    <canvas id="map" width="500" height="500">
+    <canvas id="GRORORO" width="500" height="500">
 
     </canvas>
 
