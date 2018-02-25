@@ -107,7 +107,12 @@ export class MainComponent implements OnInit, OnChanges {
     if (!this.path || this.path.length === 0) {
       // todo: no path found :(
     } else {
-
+      this.ctx.beginPath();
+      this.ctx.moveTo(this.path[1].x, this.path[1].y);
+      for (let i = 2; i < this.path.length; i++) {
+        this.ctx.lineTo(this.path[1].x, this.path[1].y);
+      }
+      this.ctx.stroke();
     }
   }
 
