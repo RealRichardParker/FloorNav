@@ -1,4 +1,4 @@
-<div *ngIf=(submitted) id="overall">
+<div *ngIf=(CheckMove()) id="overall">
   <!-- to do: animate button entrances? can do -->
   <div class="buttons">
     <button class="standard-button hvr-bounce-in" (click)="RUNMMM()">Sharp</button>
@@ -15,7 +15,8 @@
   <div class="main img-wrapper">
     <img src={{file.dataURL}}>
 
-    <canvas id="GRORORO" width="500" height="500">
+
+    <canvas id="GRORORO" (appOnCreate)="RUNMMM()" width="500" height="500">
 
     </canvas>
 

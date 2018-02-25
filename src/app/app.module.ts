@@ -6,6 +6,7 @@ import { DropzoneModule } from 'ngx-dropzone-wrapper';
 import { DROPZONE_CONFIG } from 'ngx-dropzone-wrapper';
 import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
 
+import { OnCreateDirective} from './app.onCreate.directive';
 
 import { AppComponent } from './app.component';
 import { UploadComponent } from './upload/upload.component';
@@ -21,6 +22,7 @@ const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
 @NgModule({
   declarations: [
     AppComponent,
+    OnCreateDirective,
     UploadComponent,
     ProcessComponent
   ],

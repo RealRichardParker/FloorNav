@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+///<reference path="../../../node_modules/@angular/core/src/metadata/directives.d.ts"/>
+import {Component, OnInit, Input, AfterViewInit, AfterContentInit, Output, EventEmitter} from '@angular/core';
 import { NgClass } from '@angular/common';
 import * as astar from 'javascript-astar';
 
@@ -16,7 +17,8 @@ export class ProcessComponent implements OnInit {
     return a < min || a >= max;
   }
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }
@@ -29,20 +31,21 @@ export class ProcessComponent implements OnInit {
 
   }
 
+  CheckMove(): boolean {
+    if (this.submitted) {
+      return true;
+    }
+    return false;
+  }
 
   RUNMMM() {
     console.log('RUN MMMM');
     const c = <HTMLCanvasElement>document.getElementById('GRORORO');
     const ctx = c.getContext('2d');
 
-    // Create gradient
-    const grd = ctx.createLinearGradient(0, 0, 200, 0);
-    grd.addColorStop(0, 'red');
-    grd.addColorStop(1, 'black');
-
-    // Fill with gradient
-    ctx.fillStyle = grd;
-    ctx.fillRect(10, 10, 150, 80);
+    const img = new Image;
+    img.src = this.file.dataURL;
+    ctx.drawImage(img, 0, 0);
   }
 
   shortest(map: Array<Array<boolean>>, start: number, end: number) {
