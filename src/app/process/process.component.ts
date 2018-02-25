@@ -247,6 +247,19 @@ export class ProcessComponent implements OnInit, OnChanges {
     this.ctx.drawImage(this.img, -e.clientX, -e.clientY, this.img.width + 800, this.img.height + 300);
   }
 
+  imageToBool(width, height): Array<Array<boolean>> {
+    let data = this.ctx.getImageData(0, 0, width, height);
+    let map = [];
+    for (let r = 0; r < height; r++) {
+      map[r] = [];
+      for (let c = 0; c < width; c++) {
+        map[r][c] = data.data[r * height * 4 + c * 4];
+      }
+    }
+
+    return map;
+  }
+
   genGraph(map: Array<Array<boolean>>) {
 
     const adj = [[-1, 0], [1, 0], [0, -1], [0, 1]];
