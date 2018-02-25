@@ -36,6 +36,21 @@ export class MainComponent implements OnInit, OnChanges {
     return (x - a) * (x - a) + (y - b) * (y - b);
   }
 
+  static perpDist(l1, l2, pt) {
+    const a = {x: pt.x - l1.x, y: pt.y - l1.y};
+    const b = {x: l2.x - l1.x, y: l2.y - l1.y};
+
+    function dot(p1, p2) {
+      return p1.x * p2.x + p1.y * p2.y;
+    }
+
+    const fac = dot(a, b) / dot(b, b);
+    const x = a.x - fac * b.x;
+    const y = a.y - fac * b.y;
+
+    return Math.sqrt(x * x + y * y);
+  }
+
   ngOnInit() {
   }
 
@@ -100,9 +115,32 @@ export class MainComponent implements OnInit, OnChanges {
   astar(): void {
     const start = this.map.grid[this.points[0].x][this.points[0].y];
     const end = this.map.grid[this.points[1].x][this.points[1].y];
-    this.path = search(this.map, start, end);
+    this.path = this.smoothPath(search(this.map, start, end), 5);
+  }
 
-    // todo: path smoothing
+  smoothPath(ptList: Array<any>, epsilon): Array<any> {
+    let dmax = 0;
+    let index = 0;
+    const end = ptList.length;
+
+    let res = [];
+
+    for (let i = 1; i < end; i++) {
+      const d = MainComponent.perpDist(ptList[0], ptList[end - 1], ptList[i]);
+      if (d > dmax) {
+        index = i;
+        dmax = d;
+      }
+    }
+
+    if (dmax > epsilon) {
+      res = this.smoothPath(ptList.slice(0, index), epsilon);
+      res.push.apply(res, this.smoothPath(ptList.slice(index), epsilon));
+    } else {
+      res = [ptList[0], ptList[end - 1]];
+    }
+
+    return res;
   }
 
   drawPath(): void {
