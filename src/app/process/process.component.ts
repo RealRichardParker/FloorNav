@@ -15,8 +15,9 @@ import * as astar from 'javascript-astar';
 import {trigger, state, style, animate, keyframes, transition} from '@angular/animations';
 import * as tesseract from 'tesseract.js';
 import * as himalaya from 'himalaya';
+
 const options = {
-  langPath: "tessdata" // Or wherever your downloaded langs are stored
+  langPath: 'tessdata' // Or wherever your downloaded langs are stored
 };
 
 const Graph = astar.Graph;
@@ -69,7 +70,7 @@ export class ProcessComponent implements OnInit, OnChanges {
 
   bounceState = 'inactive';
 
-  pulseState: string = "inactive";
+  pulseState: string = 'inactive';
 
   // 1 for sharp, 2 for blurry, 3 for dirty
   processingType: number;
@@ -102,7 +103,7 @@ export class ProcessComponent implements OnInit, OnChanges {
     }
   }
 
-  startPulse() : void {
+  startPulse(): void {
     this.pulseState = 'active';
   }
 
@@ -152,6 +153,7 @@ export class ProcessComponent implements OnInit, OnChanges {
 
   prepare(): void {
     this.processSelected = true;
+
     this.ocr();
     console.log(this.processSelected);
     this.endPulse();
@@ -161,7 +163,7 @@ export class ProcessComponent implements OnInit, OnChanges {
     return this.submitted && !this.processSelected;
   }
 
-  processLoading() : boolean {
+  processLoading(): boolean {
     return this.processSelected && !this.processComplete;
   }
 
@@ -239,16 +241,16 @@ export class ProcessComponent implements OnInit, OnChanges {
 
     let tesseractPromise: any;
     tesseractPromise = tesseract.recognize(this.file.dataURL, {lang: 'eng'})
-      .progress(message => console.log("current progress: ", message))
+      .progress(message => console.log('current progress: ', message))
       .then(result => {
         this.parseTesseractResults(result);
         this.drawRect();
       })
       .catch(rejected => {
-        console.log("err with tesseractJob")
+        console.log('err with tesseractJob');
       })
       .finally(failure => {
-        console.log("completed");
+        console.log('completed');
         this.processComplete = true;
       });
   }
@@ -275,7 +277,7 @@ export class ProcessComponent implements OnInit, OnChanges {
 
   drawRect() {
     //console.log(coordsArr);
-   // console.log(this.ctx.ImageData);
+    // console.log(this.ctx.ImageData);
     let imgData = this.ctx.getImageData(0, 0, this.img.width, this.img.height);
     let data = imgData.data;
 
@@ -287,7 +289,7 @@ export class ProcessComponent implements OnInit, OnChanges {
       let leftY = obj.upperLeftY;
       let rightX = obj.lowerRightX;
       let rightY = obj.lowerRightY;
-      this.ctx.fillStyle="#000000";
+      this.ctx.fillStyle = '#ffffffff';
       this.ctx.fillRect(leftX, leftY, rightX - leftX, rightY - rightY);
       this.ctx.putImageData(imgData, 0, 0);
     }
@@ -297,20 +299,20 @@ export class ProcessComponent implements OnInit, OnChanges {
     for (let key in json) {
       let keys = Object.keys(json);
       if (json.hasOwnProperty(key)) {
-        if (json[key] == "span") {
+        if (json[key] == 'span') {
           for (let nextKey in json.attributes) {
             if (json.attributes.hasOwnProperty(nextKey)) {
-              if (json.attributes[nextKey].value == "ocr_line")
+              if (json.attributes[nextKey].value == 'ocr_line')
                 break;
               if (json.attributes[nextKey].key == 'title') {
                 //console.log(json.attributes[nextKey].value);
-                let arr = json.attributes[nextKey].value.split(" ");
+                let arr = json.attributes[nextKey].value.split(' ');
                 this.coordsArr.push({
-                  "upperLeftX": arr[1],
-                  "upperLeftY": arr[2],
-                  "lowerRightX": arr[3],
-                  "lowerRightY": arr[4]
-                })
+                  'upperLeftX': arr[1],
+                  'upperLeftY': arr[2],
+                  'lowerRightX': arr[3],
+                  'lowerRightY': arr[4]
+                });
               }
             }
           }
