@@ -31,7 +31,7 @@ Coming up with the algorithm to convert a picture of a floor plan into a graph i
 Working on such an extensive project, with so many elements, for the first time was a thrillingly difficult challenge, and managing and putting together each aspect was deeply rewarding, especially when the project came together at the end.
 
 ## What we learned
-We were all learned how to build a Webapp using Angular 2 and discovered the challenges of group projects: merge conflicts. We leaned about Ramer–Douglas–Peucker algorithm and how to implement it. We discovered how to do image processing and the associated difficulties involved with such an undertaking. 
+We were all learned how to build a Webapp using Angular 2 and discovered the challenges of group projects: merge conflicts. We leaned about Ramer–Douglas–Peucker algorithm and how to implement it. We discovered how to do image processing and the associated difficulties involved with such an undertaking. 
 
 ## What's next for FloorNav
 Our original idea still stands. We hope to one day develop an AR system that can show the user's location on the map which will bring about live directions like a GPS or Google Maps can. This functionality was entirely of our project scope for this event as we lacked both the hardware and experience to implement AR. 
