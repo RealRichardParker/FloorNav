@@ -1,6 +1,8 @@
 # FloorNav
 Webapp to navigate through buildings
 
+Try it here: https://realrichardparker.github.io/FloorNav/
+
 ## Inspiration
 Three of our team members do not attend UTD, and as such had difficulty finding where our last team member was within the JSOM building. These three members wandered about the JSOM building for quite some time, confused as to exactly where room 12.214 was - the location of where the fourth member had set up our hacking station. They thought it was on the twelfth floor; it made sense as the number before the decimal tended to indicate which floor a room was on. We thought that these problems could be solved or mitigated using an application, a path-finding app for finding rooms in buildings that would display directions to rooms. 
 <!-- One of the unsolved problems in computer science is to create a navigation interface that works in close distances like indoors. A few suggestions have been made like Google Indoors or Apple iBeacon, but they either do not work in smaller environments or require additional hardware. Therefore, we decided to tackle this challenge through image analysis. -->
